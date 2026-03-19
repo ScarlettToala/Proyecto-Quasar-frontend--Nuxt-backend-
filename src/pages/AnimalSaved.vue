@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <h2 class="text-h4">Catàleg d'Animals</h2>
+    <h2 class="text-h4">Animals Desats</h2>
     
     <div class="row q-col-gutter-md">
       <div class="col-12 col-md-4" v-for="animal in animals" :key="animal.id">
@@ -31,8 +31,8 @@ const $q = useQuasar()
 
 const carregarAnimals = async () => {
   try {
-    // Crida al teu backend de Nuxt (animals.get.ts)
-    const response = await api.get('/api/animals')
+    // Crida al teu backend de Nuxt (animals.posty.ts)
+    const response = await api.get('/api/animals_saved')
     animals.value = response.data
   } catch (error) {
     console.error('Error al carregar animals:', error)
