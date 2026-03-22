@@ -1,81 +1,71 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    
+    <q-header elevated class="bg-primary text-white">
       <q-toolbar>
-        <q-btn flat dense round icon="menu" aria-label="Menu" @click="toggleLeftDrawer" />
+        <q-btn flat no-caps to="/" class="text-h6 q-mr-sm">
+          Mi Catálogo Animal
+        </q-btn>
 
-        <q-toolbar-title> Scarlett App </q-toolbar-title>
+        <q-space />
 
-        <div>Quasar v{{ $q.version }}</div>
+        <div v-if="isLoggedIn" class="q-gutter-sm">
+          <q-btn flat icon="favorite" to="/mis-animales" label="Mis Animales" />
+          <q-btn flat icon="add" to="/animal/nuevo" label="Añadir" />
+          <q-btn outline icon="logout" @click="cerrarSesion" label="Salir" />
+        </div>
+
+        <div v-else class="q-gutter-sm">
+          <q-btn flat to="/login" label="Entrar" />
+          <q-btn color="secondary" to="/register" label="Registrarse" />
+        </div>
+
       </q-toolbar>
     </q-header>
-
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
-      <q-list>
-        <q-item-label header> Essential Links </q-item-label>
-
-        <EssentialLink v-for="link in linksList" :key="link.title" v-bind="link" />
-      </q-list>
-    </q-drawer>
 
     <q-page-container>
       <router-view />
     </q-page-container>
+
   </q-layout>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { api } from 'boot/axios' // <-- ¡AQUÍ ESTÁ LA SOLUCIÓN! Importamos 'api'
 
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
-  },
-]
+const route = useRoute()
+const router = useRouter()
 
-const leftDrawerOpen = ref(false)
+// Variable para controlar si mostramos el menú de usuario o el de login
+const isLoggedIn = ref(false)
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+// Función para comprobar el token
+const checkLoginStatus = () => {
+  const token = localStorage.getItem('token')
+  isLoggedIn.value = !!token // Si hay token es true, si es null es false
+}
+  
+// Comprobamos si hay sesión al cargar el layout
+onMounted(() => {
+  checkLoginStatus()
+})
+  
+// Vigilamos cada vez que cambias de página para actualizar el Header 
+// (por si acabas de hacer login)
+watch(() => route.path, () => {
+  checkLoginStatus()
+})
+
+const cerrarSesion = () => {
+  localStorage.removeItem('token')
+  
+  // Como ya importamos 'api' arriba, esto ahora funcionará perfecto
+  delete api.defaults.headers.common['Authorization'] 
+  
+  checkLoginStatus()
+  
+  router.push('/login')
 }
 </script>

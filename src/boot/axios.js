@@ -5,10 +5,15 @@ import axios from 'axios'
 // Si proves al navegador del PC (spa), canvia-ho a http://localhost:3000
 const api = axios.create({ baseURL: 'http://localhost:3000' })
 
-// Si decideixes mantenir les cookies del nuxt-auth-utils, necessites això:
-api.defaults.withCredentials = true; 
-
 export default boot(({ app }) => {
+  // Cuando la app arranca, miramos si hay un token guardado
+  const token = localStorage.getItem('token')
+  
+  if (token) {
+    // Si hay token, se lo pegamos a Axios
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
+
   app.config.globalProperties.$axios = axios
   app.config.globalProperties.$api = api
 })

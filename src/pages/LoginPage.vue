@@ -75,7 +75,7 @@
 import { reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { api } from 'boot/axios' // Tu axios configurado en Quasar
+import { api } from 'boot/axios' 
 
 const $q = useQuasar()
 const router = useRouter()
@@ -91,8 +91,18 @@ const onSubmit = async () => {
   loading.value = true
 
   try {
-    // Hacemos la llamada al backend de Nuxt (que debe estar en el puerto 3000)
-    await api.post('/auth/login', state)
+    const response = await api.post('/auth/login', state)
+
+    // 1. EXTRAEMOS EL TOKEN (Asegúrate de que tu backend lo devuelve como "token")
+    const token = response.data.token 
+
+    if (token) {
+      // 2. LO GUARDAMOS EN EL NAVEGADOR/MÓVIL
+      localStorage.setItem('token', token)
+      
+      // 3. LE DECIMOS A AXIOS QUE LO USE EN LAS PRÓXIMAS PETICIONES
+      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+    }
 
     $q.notify({
       type: 'positive',
@@ -101,7 +111,7 @@ const onSubmit = async () => {
     })
 
     // Redirigir al usuario al catálogo de animales
-    router.push('/animals')
+    router.push('/') // Lo cambiamos a '/' porque ahora tu catálogo está en la raíz
 
   } catch (error) {
     const message = error.response?.data?.message || 'Credenciales incorrectas'
@@ -116,7 +126,6 @@ const onSubmit = async () => {
 }
 
 const loginWithGithub = () => {
-  // Aquí tendrías que abrir el popup hacia la URL de Nuxt
   window.open('http://localhost:3000/auth/github', 'popup', 'width=600,height=600')
 }
 </script>

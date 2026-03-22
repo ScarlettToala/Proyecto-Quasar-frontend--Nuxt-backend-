@@ -3,25 +3,30 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
-      { path: 'llistat', component: () => import('pages/LlistatPage.vue') },
-      { path: ':listId/llistat', props: true, component: () => import('pages/LlistatPage.vue') },
-      { path: 'animals', component: () => import('pages/AnimalsPage.vue') },
+      // 1. Catálogo principal (es lo primero que carga al entrar a '/')
+      { path: '', component: () => import('pages/AnimalsPage.vue') },
+
+      // 2. Gestión de Animales (Nuevas rutas)
+      // IMPORTANTE: 'nuevo' debe ir antes de ':id'
+      { path: 'animal/nuevo', component: () => import('pages/NewAnimal.vue') },
+      { path: 'animal/:id', component: () => import('pages/AnimalDetail.vue') },
+      { path: 'mis-animales', component: () => import('pages/animalSaved.vue') },
+
+      // 3. Autenticación
       { path: 'login', component: () => import('pages/LoginPage.vue') },
-      { path: 'register', component: () => import('pages/RegisterPage.vue') }
-      // { path: 'animals_saved', component: () => import('pages/AnimalsPage.vue') }
+      { path: 'register', component: () => import('pages/RegisterPage.vue') },
+
+      // 4. Tus otras rutas que ya tenías
+      { path: 'llistat', component: () => import('pages/LlistatPage.vue') },
+      { path: ':listId/llistat', props: true, component: () => import('pages/LlistatPage.vue') }
     ],
   },
 
-  // Always leave this as last one,
-  // but you can also remove it
+  // Catch-all para errores 404 (Siempre al final)
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },
-
-
-
 ]
 
 export default routes
