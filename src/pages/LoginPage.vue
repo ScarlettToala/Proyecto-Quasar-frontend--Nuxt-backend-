@@ -72,60 +72,88 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted, onUnmounted } from 'vue' // Añadimos onMounted y onUnmounted
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
-import { api } from 'boot/axios' 
+import { api } from 'boot/axios'
 
 const $q = useQuasar()
 const router = useRouter()
-
 const loading = ref(false)
+
 const state = reactive({
   email: '',
   password: ''
 })
 
+// === LOGIN NORMAL CON EMAIL ===
 const onSubmit = async () => {
   if (loading.value) return
   loading.value = true
 
   try {
     const response = await api.post('/auth/login', state)
-
-    // 1. EXTRAEMOS EL TOKEN (Asegúrate de que tu backend lo devuelve como "token")
     const token = response.data.token 
 
     if (token) {
-      // 2. LO GUARDAMOS EN EL NAVEGADOR/MÓVIL
       localStorage.setItem('token', token)
-      
-      // 3. LE DECIMOS A AXIOS QUE LO USE EN LAS PRÓXIMAS PETICIONES
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`
     }
 
-    $q.notify({
-      type: 'positive',
-      message: 'Has iniciado sesión correctamente',
-      position: 'top'
-    })
-
-    // Redirigir al usuario al catálogo de animales
-    router.push('/') // Lo cambiamos a '/' porque ahora tu catálogo está en la raíz
+    $q.notify({ type: 'positive', message: 'Has iniciado sesión correctamente', position: 'top' })
+    router.push('/')
 
   } catch (error) {
     const message = error.response?.data?.message || 'Credenciales incorrectas'
-    $q.notify({
-      type: 'negative',
-      message: message,
-      position: 'top'
-    })
+    $q.notify({ type: 'negative', message: message, position: 'top' })
   } finally {
     loading.value = false
   }
 }
 
+// === LOGIN CON GITHUB ===
 const loginWithGithub = () => {
-  window.open('http://localhost:3000/auth/github', 'popup', 'width=600,height=600')
+  // Abrimos el popup de GitHub
+  window.open('http://localhost:3000/auth/github', 'github_login', 'width=600,height=600')
 }
+
+// === EL ESCUCHADOR MÁGICO ===
+const handleMessage = (event) => {
+  // 1. SEGURIDAD: Solo aceptamos mensajes que vengan de tu backend (puerto 3000)
+  if (event.origin !== 'http://localhost:3000') return
+
+  // 2. Extraemos el token que el backend nos acaba de enviar
+  const token = event.data.token
+
+  if (token) {
+    // 3. Guardamos el token exactamente igual que en el login normal
+    localStorage.setItem('token', token)
+    api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+
+    $q.notify({
+      type: 'positive',
+      message: '¡Login con GitHub exitoso!',
+      position: 'top'
+    })
+
+    // Redirigimos al inicio
+    router.push('/')
+  } else if (event.data.error) {
+    $q.notify({
+      type: 'negative',
+      message: 'Error al iniciar sesión con GitHub',
+      position: 'top'
+    })
+  }
+}
+
+// Encendemos el escuchador cuando el usuario entra a la pantalla de Login
+onMounted(() => {
+  window.addEventListener('message', handleMessage)
+})
+
+// Lo apagamos si el usuario se va a otra pantalla (para que no consuma memoria)
+onUnmounted(() => {
+  window.removeEventListener('message', handleMessage)
+})
 </script>
