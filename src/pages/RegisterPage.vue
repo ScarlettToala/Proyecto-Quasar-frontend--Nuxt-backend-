@@ -132,6 +132,6 @@ const onSubmit = async () => {
 
 const registerWithGithub = () => {
   // Abre el popup apuntando a la ruta de tu backend en el puerto 3000
-  window.open('http://localhost:3000/auth/github', 'popup', 'width=600,height=600')
+  window.open('http://localhost:3000/auth/register', 'popup', 'width=600,height=600')
 }
 </script>

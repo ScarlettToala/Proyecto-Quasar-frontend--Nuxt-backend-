@@ -10,7 +10,7 @@ const routes = [
       // IMPORTANTE: 'nuevo' debe ir antes de ':id'
       { path: 'animal/nuevo', component: () => import('pages/NewAnimal.vue') },
       { path: 'animal/:id', component: () => import('pages/AnimalDetail.vue') },
-      { path: 'mis-animales', component: () => import('pages/animalSaved.vue') },
+      { path: 'mis-animales', component: () => import('pages/AnimalSaved.vue') },
 
       // 3. Autenticación
       { path: 'login', component: () => import('pages/LoginPage.vue') },

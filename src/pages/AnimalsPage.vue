@@ -40,20 +40,16 @@ const carregarAnimals = async () => {
   }
 }
 
+// En el método donde guardas el animal en Quasar:
 const guardarAnimal = async (animalId) => {
   try {
-    // Crida al teu endpoint POST /api/animals_saved
-    await api.post('/api/animals_saved', { animalId: animalId })
-    
-    // Exemple del Notify Plugin que et demana el professor
-    $q.notify({
-      type: 'positive',
-      message: "S'ha guardat l'animal correctament!",
-      position: 'top'
-    })
+    await api.post('/animals_saved', 
+      { animalId: animalId }, 
+      { withCredentials: true } // 🔑 ¡ESTA ES LA LLAVE MÁGICA!
+    )
+    $q.notify({ type: 'positive', message: 'Animal guardado 🐾' })
   } catch (error) {
-    console.error('El motivo del fallo es:', error)
-    $q.notify({ type: 'negative', message: 'Error al guardar (potser no estàs loguejat)' })
+    console.error(error)
   }
 }
 
