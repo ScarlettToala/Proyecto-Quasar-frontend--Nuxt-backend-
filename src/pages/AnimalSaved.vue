@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { api } from 'boot/axios'
 import { useQuasar } from 'quasar'
-import AnimalCard from "@/components/animalCard.vue"
+import AnimalCard from 'components/AnimalCard.vue'
 
 const $q = useQuasar()
 const animals = ref([])
@@ -100,7 +100,7 @@ onMounted(() => {
 
     <div class="row justify-center q-mt-xl">
       <q-btn 
-        to="/catalogo/index" 
+        to="/" 
         color="primary" 
         size="lg" 
         icon="pets" 

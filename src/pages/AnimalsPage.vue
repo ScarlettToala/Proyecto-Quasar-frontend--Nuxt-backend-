@@ -43,13 +43,14 @@ const carregarAnimals = async () => {
 // En el método donde guardas el animal en Quasar:
 const guardarAnimal = async (animalId) => {
   try {
-    await api.post('/animals_saved', 
+    await api.post('/api/animals_saved', 
       { animalId: animalId }, 
       { withCredentials: true } // 🔑 ¡ESTA ES LA LLAVE MÁGICA!
     )
     $q.notify({ type: 'positive', message: 'Animal guardado 🐾' })
   } catch (error) {
     console.error(error)
+    $q.notify({ type: 'negative', message: 'Error al guardar el animal' })
   }
 }
 

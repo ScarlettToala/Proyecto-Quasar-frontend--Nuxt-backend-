@@ -114,7 +114,7 @@ const onSubmit = async () => {
     })
 
     // Si se registra bien, lo mandamos directo al catálogo de animales
-    router.push('/animals')
+    router.push('/mis-animales')
 
   } catch (error) {
     // Si falla, mostramos el mensaje de error del backend

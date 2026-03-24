@@ -4,7 +4,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       // 1. Catálogo principal (es lo primero que carga al entrar a '/')
-      { path: '', component: () => import('pages/AnimalsPage.vue') },
+      { path: '/', component: () => import('pages/AnimalsPage.vue') },
 
       // 2. Gestión de Animales (Nuevas rutas)
       // IMPORTANTE: 'nuevo' debe ir antes de ':id'

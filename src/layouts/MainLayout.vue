@@ -1,20 +1,24 @@
 <template>
   <q-layout view="lHh Lpr lFf" class="bg-grey-1">
     
-    <q-header elevated class="text-white shadow-10" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);">
+    <q-header 
+      elevated 
+      class="shadow-10 transition-header" 
+      :class="isLoggedIn ? 'text-white' : 'bg-white text-dark'"
+      :style="isLoggedIn ? 'background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);' : ''"
+    >
       <q-toolbar class="q-py-sm q-px-md">
         
         <q-btn flat no-caps to="/" class="q-px-md rounded-borders hover-scale">
-          <q-icon name="pets" size="sm" class="q-mr-sm text-green-400" />
+          <q-icon name="pets" size="sm" class="q-mr-sm" :class="isLoggedIn ? 'text-green-400' : 'text-green-600'" />
           <div class="text-h6 font-bold tracking-tight">
-            Bio<span class="text-green-400">Pedia</span>
+            Bio<span :class="isLoggedIn ? 'text-green-400' : 'text-green-600'">Pedia</span>
           </div>
         </q-btn>
 
         <q-space />
 
         <div v-if="isLoggedIn" class="row items-center q-gutter-x-sm">
-          
           <div class="gt-xs q-gutter-x-sm">
             <q-btn 
               flat 
@@ -54,7 +58,7 @@
             no-caps 
             to="/login" 
             label="Entrar" 
-            class="rounded-xl"
+            class="rounded-xl text-primary"
           />
           <q-btn 
             unelevated 
