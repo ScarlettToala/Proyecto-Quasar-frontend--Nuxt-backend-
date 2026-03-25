@@ -1,21 +1,15 @@
 <template>
   <q-page padding>
-    <h2 class="text-h4">Catàleg d'Animals</h2>
+    <h2 class="text-h4 q-mb-lg">Catàleg d'Animals</h2>
     
     <div class="row q-col-gutter-md">
-      <div class="col-12 col-md-4" v-for="animal in animals" :key="animal.id">
-        <q-card>
-          <img :src="animal.imageUrl || 'https://via.placeholder.com/150'" style="height: 200px; object-fit: cover;">
-          <q-card-section>
-            <div class="text-h6">{{ animal.name }}</div>
-            <div class="text-subtitle2">{{ animal.scientific_name }}</div>
-            <q-badge color="primary">{{ animal.category }}</q-badge>
-          </q-card-section>
-
-          <q-card-actions align="right">
-            <q-btn flat color="secondary" label="Guardar a favorits" @click="guardarAnimal(animal.id)" />
-          </q-card-actions>
-        </q-card>
+      <div class="col-12 col-sm-6 col-md-4" v-for="animal in animals" :key="animal.id">
+        
+        <AnimalCard 
+          :animal="animal" 
+          @guardar="guardarAnimal" 
+        />
+        
       </div>
     </div>
   </q-page>
@@ -24,14 +18,16 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { api } from 'boot/axios'
-import { useQuasar } from 'quasar' // Per fer servir el plugin Notify que et demanen
+import { useQuasar } from 'quasar'
+
+// Importamos la tarjeta. Revisa que la ruta sea correcta según tus carpetas.
+import AnimalCard from 'components/AnimalCard.vue' 
 
 const animals = ref([])
 const $q = useQuasar()
 
 const carregarAnimals = async () => {
   try {
-    // Crida al teu backend de Nuxt (animals.get.ts)
     const response = await api.get('/api/animals')
     animals.value = response.data
   } catch (error) {
@@ -40,12 +36,11 @@ const carregarAnimals = async () => {
   }
 }
 
-// En el método donde guardas el animal en Quasar:
 const guardarAnimal = async (animalId) => {
   try {
     await api.post('/api/animals_saved', 
       { animalId: animalId }, 
-      { withCredentials: true } // 🔑 ¡ESTA ES LA LLAVE MÁGICA!
+      { withCredentials: true } 
     )
     $q.notify({ type: 'positive', message: 'Animal guardado 🐾' })
   } catch (error) {

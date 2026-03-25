@@ -1,14 +1,19 @@
+// router/routes.js
 const routes = [
   {
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      // 1. Catálogo principal (es lo primero que carga al entrar a '/')
+      // 1. Catálogo principal
       { path: '/', component: () => import('pages/AnimalsPage.vue') },
 
-      // 2. Gestión de Animales (Nuevas rutas)
-      // IMPORTANTE: 'nuevo' debe ir antes de ':id'
+      // 2. Gestión de Animales
+      // Fíjate en el orden: primero las rutas fijas, luego las dinámicas (:id)
       { path: 'animal/nuevo', component: () => import('pages/NewAnimal.vue') },
+      
+      // Editar un animal
+      { path: 'animal/editar/:id', component: () => import('pages/EditAnimal.vue') },
+      
       { path: 'animal/:id', component: () => import('pages/AnimalDetail.vue') },
       { path: 'mis-animales', component: () => import('pages/AnimalSaved.vue') },
 
@@ -16,13 +21,13 @@ const routes = [
       { path: 'login', component: () => import('pages/LoginPage.vue') },
       { path: 'register', component: () => import('pages/RegisterPage.vue') },
 
-      // 4. Tus otras rutas que ya tenías
+      // 4. Tus otras rutas
       { path: 'llistat', component: () => import('pages/LlistatPage.vue') },
       { path: ':listId/llistat', props: true, component: () => import('pages/LlistatPage.vue') }
     ],
   },
 
-  // Catch-all para errores 404 (Siempre al final)
+  // Catch-all
   {
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),

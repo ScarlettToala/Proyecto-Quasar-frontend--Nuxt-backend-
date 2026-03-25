@@ -1,5 +1,9 @@
 <template>
-  <q-card v-if="animal" class="mi-card q-hoverable cursor-pointer shadow-5">
+  <q-card 
+    v-if="animal" 
+    class="mi-card q-hoverable cursor-pointer shadow-5" 
+    @click="irAlDetalle"
+  >
     <div class="q-focus-helper"></div>
 
     <q-img
@@ -39,24 +43,17 @@
       </div>
     </q-card-section>
 
-    <q-card-actions class="q-pa-md row q-col-gutter-sm">
-      <div class="col">
-        <q-btn
-          flat
-          no-caps
-          label="👁️ Ver detalle"
-          :to="`/animal/${animal.id}`"
-          class="full-width btn-detalle rounded-borders"
-        />
+    <q-card-actions class="q-pa-md row q-col-gutter-sm justify-center">
+      <div class="col-auto">
+        <q-btn flat no-caps label="👁️ Detalle" @click.stop="irAlDetalle" class="btn-detalle rounded-borders" />
       </div>
-      <div v-if="isLoggedIn" class="col">
-        <q-btn
-          unelevated
-          no-caps
-          label="✏️ Editar"
-          :to="`/animal/editar/${animal.id}`"
-          class="full-width btn-editar text-weight-bold"
-        />
+      
+      <div v-if="isLoggedIn" class="col-auto">
+        <q-btn unelevated no-caps label="✏️ Editar" @click.stop="irAEditar" class="btn-editar text-weight-bold" />
+      </div>
+      
+      <div v-if="isLoggedIn" class="col-auto">
+        <q-btn flat no-caps color="secondary" label="💖 Guardar" @click.stop="$emit('guardar', animal.id)" class="rounded-borders" />
       </div>
     </q-card-actions>
   </q-card>
@@ -64,18 +61,31 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
-defineProps(['animal'])
+const props = defineProps(['animal'])
+defineEmits(['guardar'])
 
-// En Quasar usamos el check del localStorage que ya tienes en el layout
+// Importamos el router para poder navegar desde las funciones
+const router = useRouter()
 const isLoggedIn = ref(false)
 
 onMounted(() => {
   isLoggedIn.value = !!localStorage.getItem('token')
 })
+
+// Funciones de navegación
+const irAlDetalle = () => {
+  router.push(`/animal/${props.animal.id}`)
+}
+
+const irAEditar = () => {
+  router.push(`/animal/editar/${props.animal.id}`)
+}
 </script>
 
 <style lang="scss" scoped>
+/* ¡Tus estilos siguen exactamente igual de bonitos! */
 .mi-card {
   border-radius: 20px;
   overflow: hidden;
@@ -110,7 +120,6 @@ onMounted(() => {
   line-height: 1.5;
 }
 
-/* Estilos de botones */
 .btn-detalle {
   background: #f1f5f9;
   color: #1e293b;

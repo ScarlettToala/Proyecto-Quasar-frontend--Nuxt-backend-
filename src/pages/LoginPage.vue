@@ -92,19 +92,25 @@ const onSubmit = async () => {
   loading.value = true
 
   try {
-    const response = await api.post('/auth/login', state)
+    const response = await api.post('/auth/token/login', state)
     const token = response.data.token 
 
     if (token) {
+      // 1. Guardamos el token
       localStorage.setItem('token', token)
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`
+      
+      // 2. Notificamos y redirigimos SOLO si hubo token
+      $q.notify({ type: 'positive', message: 'Has iniciado sesión correctamente', position: 'top' })
+      router.push('/')
+    } else {
+      // Si el backend no mandó token por algún error raro
+      throw new Error('No se recibió el token del servidor')
     }
 
-    $q.notify({ type: 'positive', message: 'Has iniciado sesión correctamente', position: 'top' })
-    router.push('/')
-
   } catch (error) {
-    const message = error.response?.data?.message || 'Credenciales incorrectas'
+    // Si usas throw new Error arriba, o si el backend da error 400, cae aquí
+    const message = error.response?.data?.statusMessage || error.message || 'Credenciales incorrectas'
     $q.notify({ type: 'negative', message: message, position: 'top' })
   } finally {
     loading.value = false

@@ -104,7 +104,7 @@ const onSubmit = async () => {
 
   try {
     // Petición POST a tu backend Nuxt
-    await api.post('/auth/register', state)
+    await api.post('/auth/token/register', state)
 
     // Notificación de éxito
     $q.notify({
