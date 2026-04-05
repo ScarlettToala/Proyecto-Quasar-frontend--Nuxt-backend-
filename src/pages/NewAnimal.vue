@@ -10,6 +10,20 @@ const $q = useQuasar()
 const isLoading = ref(false)
 const errorMessage = ref('')
 
+// Definir la variable 'categorias':
+// En tu NewAnimal.vue o AnimalsPage.vue
+const categorias = ref([
+  { label: 'Mamífero', value: 'mammal' },
+  { label: 'Ave', value: 'bird' },
+  { label: 'Reptil', value: 'reptile' },
+  { label: 'Anfibio', value: 'amphibian' },
+  { label: 'Pez', value: 'fish' },
+  { label: 'Insecto', value: 'insect' },
+  { label: 'Molusco', value: 'mollusk' },
+  { label: 'Arácnido', value: 'arachnid' },
+  { label: 'Crustáceo', value: 'crustacean' }
+])
+
 // Preparamos el formulario reactivo
 const form = ref({
   name: '',
@@ -36,7 +50,7 @@ const guardarNuevoAnimal = async () => {
     })
 
     // Redirigimos al catálogo
-    router.push('/catalogo')
+    router.push('/')
 
   } catch (error) {
     console.error("Error al guardar:", error)

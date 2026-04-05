@@ -18,6 +18,7 @@
 
         <q-space />
 
+        
         <div v-if="isLoggedIn" class="row items-center q-gutter-x-sm">
           <div class="gt-xs q-gutter-x-sm">
             <q-btn 

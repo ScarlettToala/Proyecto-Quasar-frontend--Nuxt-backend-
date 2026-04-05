@@ -69,6 +69,7 @@ onMounted(() => {
 
       <q-card-actions align="left" class="q-pa-md">
         <q-btn push color="secondary" to="/" icon="arrow_back" label="Volver al catálogo" />
+        <q-btn push color="secondary" to="/mis-animales" icon="arrow_back" label="Ir a mi lista de animales" />
       </q-card-actions>
     </q-card>
 

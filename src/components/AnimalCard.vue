@@ -20,41 +20,35 @@
       </template>
     </q-img>
 
-    <q-card-section>
+    <q-card-section class="col-grow column justify-start">
       <div class="text-h6 text-weight-bold text-blue-grey-9 text-center q-mb-xs">
         {{ animal.name }}
       </div>
       
       <div class="info-texto q-gutter-y-xs">
         <div v-if="animal.scientific_name" class="text-caption italic text-grey-7">
-          <strong>Científico:</strong> <i>{{ animal.scientific_name }}</i>
+          <strong>{{ $t('Nombre científico') }}:</strong> <i>{{ animal.scientific_name }}</i>
         </div>
         
         <div class="flex items-center q-mt-sm">
-          <span class="text-weight-bold q-mr-sm text-caption">Categoría:</span>
+          <span class="text-weight-bold q-mr-sm text-caption">{{ $t('Categoría') }}:</span>
           <q-badge rounded class="badge-gradiente">
             {{ animal.category }}
           </q-badge>
         </div>
 
         <p v-if="animal.notes" class="text-body2 text-grey-8 q-mt-md notas-truncadas">
-          <strong>Notas:</strong> {{ animal.notes }}
+          <strong>{{ $t('Notas') }}:</strong> {{ animal.notes }}
         </p>
       </div>
     </q-card-section>
 
-    <q-card-actions class="q-pa-md row q-col-gutter-sm justify-center">
-      <div class="col-auto">
-        <q-btn flat no-caps label="👁️ Detalle" @click.stop="irAlDetalle" class="btn-detalle rounded-borders" />
-      </div>
+    <q-card-actions class="q-pa-md row justify-center q-gutter-sm wrap card-actions">
+      <q-btn flat no-caps :label="`👁️ ${$t('Detalle')}`" @click.stop="irAlDetalle" class="btn-detalle rounded-borders" />
       
-      <div v-if="isLoggedIn" class="col-auto">
-        <q-btn unelevated no-caps label="✏️ Editar" @click.stop="irAEditar" class="btn-editar text-weight-bold" />
-      </div>
+      <q-btn v-if="isLoggedIn" unelevated no-caps :label="`✏️ ${$t('Editar')}`" @click.stop="irAEditar" class="btn-editar text-weight-bold" />
       
-      <div v-if="isLoggedIn" class="col-auto">
-        <q-btn flat no-caps color="secondary" label="💖 Guardar" @click.stop="$emit('guardar', animal.id)" class="rounded-borders" />
-      </div>
+      <q-btn v-if="isLoggedIn" flat no-caps color="secondary" :label="`💖 ${$t('Guardar')}`" @click.stop="$emit('guardar', animal.id)" class="rounded-borders" />
     </q-card-actions>
   </q-card>
 </template>
@@ -66,7 +60,6 @@ import { useRouter } from 'vue-router'
 const props = defineProps(['animal'])
 defineEmits(['guardar'])
 
-// Importamos el router para poder navegar desde las funciones
 const router = useRouter()
 const isLoggedIn = ref(false)
 
@@ -74,7 +67,6 @@ onMounted(() => {
   isLoggedIn.value = !!localStorage.getItem('token')
 })
 
-// Funciones de navegación
 const irAlDetalle = () => {
   router.push(`/animal/${props.animal.id}`)
 }
@@ -85,12 +77,16 @@ const irAEditar = () => {
 </script>
 
 <style lang="scss" scoped>
-/* ¡Tus estilos siguen exactamente igual de bonitos! */
 .mi-card {
   border-radius: 20px;
   overflow: hidden;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
   background: white;
+  
+  /* ESTOS 3 SON VITALES PARA EL GRID */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 
   &:hover {
     transform: translateY(-8px);
@@ -133,5 +129,17 @@ const irAEditar = () => {
   color: #1e293b;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
+}
+
+.card-actions {
+  @media (max-width: 600px) {
+    flex-direction: column !important;
+    /* Ajuste para que los botones ocupen todo el ancho en móvil si se apilan */
+    .q-btn {
+      width: 100%;
+      margin-left: 0 !important;
+      margin-top: 4px;
+    }
+  }
 }
 </style>

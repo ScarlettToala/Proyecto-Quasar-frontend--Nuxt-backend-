@@ -4,7 +4,8 @@ import axios from 'axios'
 // Aquesta és la IP màgica per a l'emulador d'Android
 // Si proves al navegador del PC (spa), canvia-ho a http://localhost:3000
 const api = axios.create({ 
-  baseURL: 'http://localhost:3000',
+  // baseURL: 'http://localhost:3000', //postatil
+  baseURL: 'http://192.168.0.20:3000', //emulador android
   withCredentials: true
 })
 

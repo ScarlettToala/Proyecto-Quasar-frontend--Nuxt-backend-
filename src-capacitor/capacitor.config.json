@@ -1,0 +1,9 @@
+{
+    "appId": "com.scarlett.biopedia",
+    "appName": "Quasar App",
+    "webDir": "www",
+    "server": {
+        "url": "http://192.168.0.20:9000",
+        "cleartext": true
+    }
+}

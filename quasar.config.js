@@ -17,6 +17,7 @@ export default defineConfig((ctx) => {
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#css
     css: ['app.scss'],
 
+
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
@@ -89,10 +90,15 @@ export default defineConfig((ctx) => {
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#devserver
-    devServer: {
-      // https: true,
-      open: true, // opens browser window automatically
-    },
+    // En quasar.config.js
+devServer: {
+  server: {
+    type: 'http'
+  },
+  host: '0.0.0.0',
+  port: 9000,
+  open: true,
+},
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-file#framework
     framework: {
